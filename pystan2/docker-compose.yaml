@@ -1,0 +1,11 @@
+version: '3'
+services:
+  dev: # 任意の名前（ディレクトリ名 + dev がコンテナ名となります）
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pystan2
+    ports:
+    - "8080:8888"
+    volumes:
+    - .:/workdir

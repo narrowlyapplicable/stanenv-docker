@@ -1,0 +1,9 @@
+dependencies:
+- python
+- numpy
+- scipy
+- matplotlib
+- seaborn
+- pystan==2.19.*
+- arviz
+- jupyterlab
