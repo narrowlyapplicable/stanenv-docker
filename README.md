@@ -18,11 +18,13 @@
 - simple-cmdstan
   - Dockerfile内でcmdstanpy + `requirements.txt`にあるパッケージを`pip install`している
     - conda(miniconda)によるインストールを試みたが、cmdstanpyインストール後の`install_cmdstan`が失敗するため断念した
+    - そのため@amber_kshzさんの[qiita記事](https://qiita.com/amber_kshz/items/172e88e5feda1e7e3133)を参考に、pipによるインストールに切り替えた
   - 必要なライブラリの変更 or バージョン指定は`requirements.txt`を編集する
-  - そのため@amber_kshzさんの[qiita記事](https://qiita.com/amber_kshz/items/172e88e5feda1e7e3133)を参考に、pipによるインストールに切り替えた
+  
 - pystan2
   - minicondaを使って`myenv.yaml`内のパッケージをインストールしている
     - Dockerfile内での`conda activate`が失敗するため、`conda env create`ではなく `conda env update　--prune`でbase環境に各パッケージをインストールしている
-    - ライセンス対策でanacondaを避ける場合は、Dockerfile内に下記を追加すれば良い
-        >RUN conda config --add channels conda-forge  
-        >RUN conda config --remove channels anaconda  
+  - ライセンス対策でanacondaを避ける場合は、Dockerfile内に下記を追加すれば良い
+    >RUN conda config --add channels conda-forge  
+    >RUN conda config --remove channels anaconda  
+  - ライブラリの変更・バージョン指定は`myenv.yaml`を編集する
