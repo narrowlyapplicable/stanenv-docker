@@ -11,10 +11,12 @@
    - `localhost:8080/lab`
 
 ## 詳細
-- docker-compose
+- 共通
   - いずれもdocker-composeから起動している
   - 起動の際、カレントディレクトリの内容をコンテナ内の`workdir/`にマウントしている
     - 試したいJupyter Notebookがあれば、 `workdir/`に置けばすぐ試行できる
+    - docker-compose.yamlからvolumes指定する方法は@komiya_____さんの[記事](https://qiita.com/komiya_____/items/96c14485eb035701e218)を参考にした
+
 - simple-cmdstan
   - Dockerfile内でcmdstanpy + `requirements.txt`にあるパッケージを`pip install`している
     - conda(miniconda)によるインストールを試みたが、cmdstanpyインストール後の`install_cmdstan`が失敗するため断念した

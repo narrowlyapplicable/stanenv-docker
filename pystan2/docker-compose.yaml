@@ -1,6 +1,6 @@
 version: '3'
 services:
-  dev: # 任意の名前（ディレクトリ名 + dev がコンテナ名となります）
+  dev:
     build:
       context: .
       dockerfile: Dockerfile
