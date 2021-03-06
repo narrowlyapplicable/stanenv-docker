@@ -7,3 +7,5 @@ services:
     image: simple-cmdstanpy
     ports:
     - "8080:8888"
+    volumes:
+    - .:/workdir

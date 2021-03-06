@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+WORKDIR /workdir
+
 COPY ./requirements.txt ./
 RUN apt-get -y update && \
     apt-get -y install python3 && \
