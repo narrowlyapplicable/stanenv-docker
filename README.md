@@ -4,10 +4,15 @@
 ## 利用法
 1. 使いたい環境のディレクトリに移動し`docker-compose up`
    - cmdstanpy
-     >cd simple-cmdstan  
-     >docker-compose up  
+     >cd cmdstanpy  
+     >docker-compose up
    - pystan2
      >cd pystan2  
+     >docker-compose up  
+   - simple-cmdstanpy
+     - condaではなくpipでcmdstanpyの環境を構築した版
+       - 当初condaでのセットアップが上手くいかなかったため、@komiya_____さんの[記事](https://qiita.com/komiya_____/items/96c14485eb035701e218)を参考に用意した代替資料。
+     >cd simple-cmdstan  
      >docker-compose up  
 2. ブラウザからJupyter Labを開く
    - `localhost:8080/lab`
@@ -17,14 +22,8 @@
   - いずれもdocker-composeから起動している
   - 起動の際、カレントディレクトリの内容をコンテナ内の`workdir/`にマウントしている
     - 試したいJupyter Notebookがあれば、 起動するディレクトリ下に置けばすぐ試行できる
-    - docker-compose.yamlからvolumes指定する方法は@komiya_____さんの[記事](https://qiita.com/komiya_____/items/96c14485eb035701e218)を参考にした
 
-- simple-cmdstan
-  - Dockerfile内でcmdstanpy + `requirements.txt`にあるパッケージを`pip install`している
-    - conda(miniconda)によるインストールを試みたが、cmdstanpyインストール後の`install_cmdstan`が失敗するため断念した
-    - そのため@amber_kshzさんの[qiita記事](https://qiita.com/amber_kshz/items/172e88e5feda1e7e3133)を参考に、pipによるインストールに切り替えた
-  - 必要なライブラリの変更 or バージョン指定は`requirements.txt`を編集する
-  
+ 
 - pystan2
   - minicondaを使って`myenv.yaml`内のパッケージをインストールしている
     - Dockerfile内での`conda activate`が失敗するため、`conda env create`ではなく `conda env update　--prune`でbase環境に各パッケージをインストールしている
@@ -33,6 +32,19 @@
     >RUN conda config --add channels conda-forge  
     >RUN conda config --remove channels anaconda  
   - ライブラリの変更・バージョン指定は`myenv.yaml`を編集する
+
+- cmdstanpy
+  - 上記の`pystan2`と同様に、`minicondaを使って`myenv.yaml`内のパッケージをインストールしている
+    - CmdStanPyはanacondaリポジトリには登録されていないため、`conda config --append channels conda-forge`している。
+    - `install_cmdstan`までをDockerfile内で済ませており、コンテナ起動後のセットアップは不要
+  - ライブラリの変更・バージョン指定は`myenv.yaml`を編集する
+
+- simple-cmdstan
+  - Dockerfile内でcmdstanpy + `requirements.txt`にあるパッケージを`pip install`している
+    - 当初conda(miniconda)によるインストールが上手くいかず、cmdstanpyインストール後の`install_cmdstan`が失敗していたため、代わりにpipでの環境を養子したもの。
+    - @amber_kshzさんの[qiita記事](https://qiita.com/amber_kshz/items/172e88e5feda1e7e3133)を参考にした。
+    - その後condaによる環境を上記の通り作成できたため、すでに使用していない。
+  - 必要なライブラリの変更 or バージョン指定は`requirements.txt`を編集する
 
 ## 速度比較
 - 8schoolsを実行し、コンパイルおよびサンプリングの速度比較
@@ -48,7 +60,7 @@
     >Wall time: 1min 5s  
 
 - サンプリング
-  - サンプリング速度は大差ない (PyStan側にcondaを使用している影響はあるかも)
+  - サンプリング速度は大差ない ~~(PyStan側にcondaを使用している影響はあるかも~~Condaで環境構築した場合も同様であった)
   - CmdStanPy
     >CPU times: user 48.1 ms, sys: 30.6 ms, total: 78.7 ms  
     >Wall time: 238 ms  
@@ -57,4 +69,5 @@
     >Wall time: 163 ms  
 
 ## TODO
-- PyStan3が正式リリースされた後、PyStan3用のDockerfileも追加する
+- PyStan3が正式リリースされた後、PyStan3用のDockerfileも追加する予定
+  - ~~機能制限がキツすぎるのでやらないかも…~~
