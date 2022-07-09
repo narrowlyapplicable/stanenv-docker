@@ -1,9 +1,10 @@
+name: base
 dependencies:
-- python
-- numpy
-- scipy
-- matplotlib
-- seaborn
-- cmdstanpy
-- arviz
-- jupyterlab
+- python>=3.10.0
+- numpy>=1.22.0
+- scipy>1.8.0
+- matplotlib>3.4.0
+- seaborn>0.11.0
+- cmdstanpy>=1.0.1
+- arviz>=0.11.0
+- jupyterlab>=3.4.0
