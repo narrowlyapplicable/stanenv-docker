@@ -8,3 +8,4 @@ dependencies:
 - cmdstanpy>=1.0.1
 - arviz>=0.11.0
 - jupyterlab>=3.4.0
+- ipywidgets>=7.0.0

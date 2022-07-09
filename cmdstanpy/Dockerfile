@@ -1,6 +1,5 @@
 FROM continuumio/miniconda3:latest
-SHELL ["/bin/bash", "-c"]
-# bashを使う　参照:<https://qiita.com/anagura0000/items/bef08bf129f1bd8529ce>
+
 WORKDIR /workdir
 
 COPY ./myenv.yaml ./
@@ -9,22 +8,18 @@ RUN conda config --append channels conda-forge && \
     conda env update --prune --name base -f myenv.yaml && \
     # conda env create -f myenv.yaml && \
     conda clean -afy 
-# RUN conda env export -n stan > ./frozen.yaml && \
-# ENV CONDA_DEFAULT_ENV stan
-# ENV PATH /opt/conda/envs/stan/bin:$PATH
-# ENV PATH $CONDA_PREFIX/bin/cmdstan:$PATH
+# 本来conda installのみでセットアップされるはずだが、Dockerでは上手くいかなかったためinstall_cmdstanを実行
+# 通常の`install_cmdstan`ではImportErrorを発するため、Python経由で実行した
 RUN apt -y update && \
     apt -y install build-essential && \
-    # eval "$(conda shell.bash hook)" && \
+    python -c 'import cmdstanpy; cmdstanpy.install_cmdstan(overwrite=True)'
+    # 別に仮想環境を作るパターンならば以下が必要
     # 参照：<https://github.com/ContinuumIO/docker-images/issues/89#issuecomment-887935997>
+    # eval "$(conda shell.bash hook)" && \
     # conda init bash && \
     # conda deactivate && \
-    # conda activate base && \
-    python -c 'import cmdstanpy; cmdstanpy.install_cmdstan(overwrite=True)'
-    # install_cmdstan && \
+    # conda activate stan && \
     # echo "conda activate stan" >> ~/.bashrc
-    # 環境名はmyenv.yamlに合わせること
-
 # GitHubを使う場合は以下も実行
 # COPY .ssh /root/.ssh
 # RUN chmod 600 /root/.ssh/*
