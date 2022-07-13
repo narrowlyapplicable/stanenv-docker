@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: cmdstanpy
+    image: cmdstanpy1
     ports:
     - "8080:8888"
     volumes:

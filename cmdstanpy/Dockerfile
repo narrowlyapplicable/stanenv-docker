@@ -9,12 +9,18 @@ RUN conda config --append channels conda-forge && \
     # 統一性のため、myenv.yamlのchannelsには`nodefaults`を追加
     # 参照<https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#sharing-an-environment>
     conda clean -afy 
+# ENV CMDSTAN=/opt/conda/bin/cmdstan/ \
+#     PATH=$CONDA_PREFIX/bin 
 # 本来conda installのみでセットアップされるはずだが、Dockerでは上手くいかなかったためinstall_cmdstanを実行
 # 通常の`install_cmdstan`ではImportErrorを発するため、Python経由で実行した
-RUN apt -y update && \
-    apt -y install build-essential && \
-    python -c 'import cmdstanpy; cmdstanpy.install_cmdstan(overwrite=True)'
+# RUN apt -y update && \
+#    apt -y install build-essential
+#    python -c 'import cmdstanpy; cmdstanpy.install_cmdstan()'
+SHELL ["/bin/bash", "-c"]
+# <https://qiita.com/anagura0000/items/bef08bf129f1bd8529ce>
+RUN source ~/.bashrc 
 
 EXPOSE 8888
-ENTRYPOINT ["jupyter-lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token='hogehoge'"]
+# ENTRYPOINT ["jupyter-lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token='hogehoge'"]
+ENTRYPOINT ["/bin/bash", "-l", "-c", "jupyter-lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='hogehoge'"]
 CMD ["--notebook-dir=/workdir"]
